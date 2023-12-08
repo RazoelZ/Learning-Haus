@@ -1,0 +1,33 @@
+POST http://127.0.0.1:8888/api/register
+Content-Type: application/application/json
+
+{
+    "name" : "Jonny kimak",
+    "email" : "Jonnykimak@gmail.com",
+    "password" : "password",
+    "idjob":   1,
+    "idcompany": 1
+}
+
+### create job
+
+POST http://127.0.0.1:8888/api/createjob
+Content-Type: application/application/json
+
+{
+    "position" : "Manager",
+    "salary" : "100000",
+    "description" : "Manager of the company"
+}
+
+### create company
+POST http://127.0.0.1:8888/api/createcompany
+Content-Type: application/application/json
+
+{
+    "name" : "Nestle Company",
+    "id" : 1
+}
+
+###
+GET http://127.0.0.1:8888/api/hello
