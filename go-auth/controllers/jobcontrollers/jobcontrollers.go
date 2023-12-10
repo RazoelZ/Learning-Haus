@@ -3,10 +3,32 @@ package jobcontrollers
 import (
 	"log"
 
-	"github.com/RazoelZ/go-auth/helper"
-	"github.com/RazoelZ/go-auth/models"
+	"github.com/RazoelZ/Learning-Haus/go-auth/helper"
+	"github.com/RazoelZ/Learning-Haus/go-auth/models"
 	"github.com/gofiber/fiber/v2"
 )
+
+func GetAllJobs(r *helper.Repository) func(*fiber.Ctx) error {
+	return func(c *fiber.Ctx) error {
+		var jobs []models.Job
+
+		err := r.DB.Find(&jobs).Error
+
+		if err != nil {
+			log.Printf("Error getting jobs: %s", err)
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"message": "Error getting jobs",
+				"error":   err.Error(),
+			})
+		}
+
+		return c.JSON(fiber.Map{
+			"status":  "success",
+			"message": "All jobs",
+			"data":    jobs,
+		})
+	}
+}
 
 func CreateJob(r *helper.Repository) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
@@ -34,6 +56,7 @@ func CreateJob(r *helper.Repository) func(*fiber.Ctx) error {
 		}
 
 		return c.JSON(fiber.Map{
+			"status":  "success",
 			"message": "Job successfully created",
 			"data":    job,
 		})

@@ -1,98 +1,70 @@
 import 'dart:convert';
-import 'package:learning/models/car_models.dart';
 import 'package:http/http.dart' as http;
+import 'package:learning/models/userModels.dart';
+import 'package:learning/constant.dart';
 
 class Repository {
-  final _baseURL = 'http://10.0.2.2:8000';
-
-  Future<List<Cars>> getData() async {
+  Future<List<User>> getUserData() async {
     try {
-      final response = await http.get(Uri.parse('$_baseURL/cars/'));
+      final response = await http.get(Uri.parse('$baseURL/users'));
       if (response.statusCode == 200) {
-        Map<String, dynamic> jsonResponse = json.decode(response.body);
-        if (jsonResponse['status'] == 'success') {
-          Iterable data = jsonResponse['data'];
-          List<Cars> carsList =
-              List<Cars>.from(data.map((model) => Cars.fromJson(model)));
-          return carsList;
+        Map<String, dynamic> jsonresponse = json.decode(response.body);
+        if (jsonresponse['status'] == 'success') {
+          Iterable data = jsonresponse['data'];
+          List<User> users = List<User>.from(data.map((e) => User.fromJson(e)));
+          return users;
         } else {
           throw Exception(
-              'API request failed with status: ${jsonResponse['status']}');
+              'API request failed with status: ${jsonresponse['status']}');
         }
       } else {
         throw Exception(
             'Failed to load data. Status code: ${response.statusCode}');
       }
     } catch (e) {
-      print(e.toString());
       throw Exception('Failed to load data: $e');
     }
   }
 
-  Future<bool> postData(String name, String version, String model) async {
+  Future<User> Login(String email, String password) async {
     try {
-      final response = await http.post(
-        Uri.parse('$_baseURL/cars/'), // Adjust the endpoint if needed
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'name': name,
-          'version': version,
-          'model': model,
-        }),
-      );
-      if (response.statusCode == 201) {
-        // Assuming your API returns a success status or some indicator of success
-        return true;
+      final response = await http.post(Uri.parse('$baseURL/login'),
+          body: {'email': email, 'password': password});
+      if (response.statusCode == 200) {
+        Map<String, dynamic> jsonresponse = json.decode(response.body);
+        if (jsonresponse['status'] == 'success') {
+          User user = User.fromJson(jsonresponse['data']);
+          return user;
+        } else {
+          throw Exception(
+              'API request failed with status: ${jsonresponse['status']}');
+        }
       } else {
-        return false;
+        throw Exception(
+            'Failed to load data. Status code: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error making POST request: $e');
-      return false;
+      throw Exception('Failed to load data: $e');
     }
   }
 
-  Future<bool> putData(
-      int carsId, String name, String version, String model) async {
+  Future<bool> DeleteUser(int id) async {
     try {
-      final response = await http.put(
-        Uri.parse('$_baseURL/cars/$carsId/'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'name': name,
-          'version': version,
-          'model': model,
-        }),
-      );
-
-      // Use 200 status code for successful updates
+      final response = await http.delete(Uri.parse('$baseURL/user/$id'));
       if (response.statusCode == 200) {
-        return true;
+        Map<String, dynamic> jsonresponse = json.decode(response.body);
+        if (jsonresponse['status'] == 'success') {
+          return true;
+        } else {
+          throw Exception(
+              'API request failed with status: ${jsonresponse['status']}');
+        }
       } else {
-        return false;
+        throw Exception(
+            'Failed to load data. Status code: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error making PUT request: $e');
-      return false;
-    }
-  }
-
-  Future<bool> deleteData(int carsId) async {
-    try {
-      final response = await http.delete(
-        Uri.parse('$_baseURL/cars/$carsId/'),
-        headers: {'Content-Type': 'application/json'},
-      );
-
-      // Use 204 status code for successful deletes
-      if (response.statusCode == 200) {
-        return true;
-      } else {
-        return false;
-      }
-    } catch (e) {
-      print('Error making DELETE request: $e');
-      return false;
+      throw Exception('Failed to load data: $e');
     }
   }
 }

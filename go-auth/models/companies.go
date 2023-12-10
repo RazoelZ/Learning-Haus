@@ -7,9 +7,8 @@ import (
 )
 
 type Company struct {
-	CompanyID uint      `gorm:"primaryKey;autoIncrement:true" json:"idcompany"`
+	CompanyID uint      `gorm:"primaryKey;autoIncrement:true" json:"company_id"`
 	Name      string    `json:"name"`
-	UserID    uint      `json:"id"`
 	CreatedAt time.Time `json:"createdAt"`
 	UpdatedAt time.Time `json:"updatedAt"`
 }

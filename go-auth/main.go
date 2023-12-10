@@ -5,12 +5,12 @@ package main
 import (
 	"log"
 
-	"github.com/RazoelZ/go-auth/controllers/companycontrollers"
-	"github.com/RazoelZ/go-auth/controllers/jobcontrollers"
-	usercontrollers "github.com/RazoelZ/go-auth/controllers/usercontrollers"
-	"github.com/RazoelZ/go-auth/database"
-	"github.com/RazoelZ/go-auth/helper"
-	"github.com/RazoelZ/go-auth/models"
+	"github.com/RazoelZ/Learning-Haus/go-auth/controllers/companycontrollers"
+	"github.com/RazoelZ/Learning-Haus/go-auth/controllers/jobcontrollers"
+	usercontrollers "github.com/RazoelZ/Learning-Haus/go-auth/controllers/usercontrollers"
+	"github.com/RazoelZ/Learning-Haus/go-auth/database"
+	"github.com/RazoelZ/Learning-Haus/go-auth/helper"
+	"github.com/RazoelZ/Learning-Haus/go-auth/models"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -45,23 +45,39 @@ func main() {
 	}
 
 	// API routing
-	api := app.Group("/api")
-	api.Get("/hello", usercontrollers.Index(&helper.Repository{
+	r := &helper.Repository{
 		DB: db,
-	}))
-	api.Post("/register", usercontrollers.Register(&helper.Repository{
-		DB: db,
-	}))
-	api.Post("/createjob", jobcontrollers.CreateJob(&helper.Repository{
-		DB: db,
-	}))
-	api.Post("/createcompany", companycontrollers.CreateCompany(&helper.Repository{
-		DB: db,
-	}))
+	}
+	SetupRoutes(app, r)
+
+	// Set up CORS
+	app.Use(func(c *fiber.Ctx) error {
+		c.Set("Access-Control-Allow-Origin", "*")
+		c.Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE")
+		c.Set("Access-Control-Allow-Headers", "Content-Type")
+		return c.Next()
+	})
 
 	// Set ports
 	err = app.Listen(":8888")
 	if err != nil {
 		log.Fatalf("Error starting the server: %v", err)
 	}
+}
+
+// SetupRoutes defines API routes
+func SetupRoutes(app *fiber.App, r *helper.Repository) {
+	api := app.Group("/api")
+	api.Get("/users", usercontrollers.Index(r))
+	api.Post("/register", usercontrollers.Register(r))
+	api.Post("/createjob", jobcontrollers.CreateJob(r))
+	api.Post("/createcompany", companycontrollers.CreateCompany(r))
+	api.Post("/login", usercontrollers.Login(r))
+	api.Put("/user/changejob/:id", usercontrollers.ChangeJob(r))
+	api.Put("/user/changecompany/:id", usercontrollers.ChangeCompany(r))
+	api.Get("/user/:id", usercontrollers.GetUserById(r))
+	api.Put("/user/:id", usercontrollers.UpdateUser(r))
+	api.Delete("/user/:id", usercontrollers.DeleteUser(r))
+	api.Get("/jobs", jobcontrollers.GetAllJobs(r))
+	api.Get("/companies", companycontrollers.GetAllCompanies(r))
 }

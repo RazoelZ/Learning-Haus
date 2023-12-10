@@ -7,7 +7,7 @@ import (
 )
 
 type Job struct {
-	JobID       uint      `gorm:"primaryKey;autoIncrement:true" json:"idjob"`
+	JobID       uint      `gorm:"primaryKey;autoIncrement:true" json:"job_id"`
 	Position    string    `json:"position"`
 	Salary      string    `json:"salary"`
 	Description string    `json:"description"`
