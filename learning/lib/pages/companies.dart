@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:learning/components/navbar.dart';
 import 'package:learning/models/companyModels.dart';
 import 'package:learning/repository/repositorycompanies.dart';
+import 'package:learning/pages/filtercompanies.dart';
 
 class CompanyPage extends StatefulWidget {
   const CompanyPage({super.key});
@@ -42,27 +43,22 @@ class _CompanyPageState extends State<CompanyPage> {
                 // Handle the onTap event
               },
               child: ListTile(
-                onTap: () {},
-                title: Text(companies[index].name),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      onPressed: () async {},
-                      icon: const Icon(Icons.delete),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => FilterCompanies(
+                        id: companies[index].company_id,
+                        name: companies[index].name,
+                      ),
                     ),
-                  ],
-                ),
+                  );
+                },
+                title: Text(companies[index].name),
               ),
             );
           },
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          fetchData();
-        },
-        child: const Icon(Icons.add),
       ),
     );
   }

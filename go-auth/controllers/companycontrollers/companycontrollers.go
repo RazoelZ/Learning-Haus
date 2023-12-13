@@ -1,6 +1,8 @@
 package companycontrollers
 
 import (
+	"strconv"
+
 	"github.com/RazoelZ/Learning-Haus/go-auth/helper"
 	"github.com/RazoelZ/Learning-Haus/go-auth/models"
 
@@ -56,5 +58,46 @@ func CreateCompany(r *helper.Repository) func(*fiber.Ctx) error {
 			"data":    company,
 		})
 
+	}
+}
+
+// INI COBA WKWKWKKWKW
+func GetFilterCompanies(r *helper.Repository) func(*fiber.Ctx) error {
+	return func(c *fiber.Ctx) error {
+		var companies []models.Company
+		var companiesFilter models.Company
+
+		// Get the "id" query parameter
+		id := c.Query("id")
+		if id == "" {
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+				"message": "Missing required 'id' parameter",
+			})
+		}
+
+		// Convert the "id" to uint64
+		companyId, err := strconv.ParseUint(id, 10, 64)
+		if err != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+				"message": "Error parsing 'id'",
+				"error":   err.Error(),
+			})
+		}
+		companiesFilter.CompanyID = uint(companyId)
+
+		// Get companies from the database based on the filtered ID
+		err = r.DB.Where("company_id = ?", companyId).Find(&companies).Error
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"message": "Error getting companies",
+				"error":   err.Error(),
+			})
+		}
+
+		return c.JSON(fiber.Map{
+			"status":  "success",
+			"message": "Filtered companies",
+			"data":    companies,
+		})
 	}
 }

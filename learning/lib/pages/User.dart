@@ -58,7 +58,7 @@ class _UserPageState extends State<UserPage> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => DetailUser(
+                          builder: (context) => DetailUserPage(
                                 id: users[index].id,
                               )));
                 },
@@ -96,13 +96,6 @@ class _UserPageState extends State<UserPage> {
             );
           },
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.pushNamed(context, 'addCars');
-        },
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
       ),
     );
   }

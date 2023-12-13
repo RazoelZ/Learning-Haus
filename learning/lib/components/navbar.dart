@@ -66,7 +66,7 @@ class _NavbarState extends State<Navbar> {
           ),
           ListTile(
             leading: const Icon(Icons.person),
-            title: const Text('Lihat karyawan'),
+            title: const Text('Karyawan'),
             onTap: () {
               Navigator.push(
                 context,
@@ -76,7 +76,7 @@ class _NavbarState extends State<Navbar> {
           ),
           ListTile(
             leading: const Icon(Icons.work),
-            title: const Text('Ganti Pekerjaan'),
+            title: const Text('Pekerjaan'),
             onTap: () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => const JobsPage()));
@@ -84,7 +84,7 @@ class _NavbarState extends State<Navbar> {
           ),
           ListTile(
             leading: const Icon(Icons.corporate_fare),
-            title: const Text('Ganti Company'),
+            title: const Text('Company'),
             onTap: () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => const CompanyPage()));

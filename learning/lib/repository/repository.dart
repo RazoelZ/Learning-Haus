@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:learning/models/userModels.dart';
 import 'package:learning/constant.dart';
+import 'package:learning/models/detailuser.dart';
 
 class Repository {
   Future<List<User>> getUserData() async {
@@ -35,6 +36,27 @@ class Repository {
         if (jsonresponse['status'] == 'success') {
           User user = User.fromJson(jsonresponse['data']);
           return user;
+        } else {
+          throw Exception(
+              'API request failed with status: ${jsonresponse['status']}');
+        }
+      } else {
+        throw Exception(
+            'Failed to load data. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Failed to load data: $e');
+    }
+  }
+
+  Future<List<DetailUser>> getDetailUser(int id) async {
+    try {
+      final response = await http.get(Uri.parse('$baseURL/user/$id'));
+      if (response.statusCode == 200) {
+        Map<String, dynamic> jsonresponse = json.decode(response.body);
+        if (jsonresponse['status'] == 'success') {
+          DetailUser detailUser = DetailUser.fromJson(jsonresponse['data']);
+          return [detailUser]; // Return a list with a single DetailUser object
         } else {
           throw Exception(
               'API request failed with status: ${jsonresponse['status']}');

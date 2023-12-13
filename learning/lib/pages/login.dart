@@ -1,5 +1,6 @@
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
+import 'package:learning/pages/roleuser.dart';
 import 'package:learning/repository/repository.dart';
 import 'package:learning/pages/home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -40,7 +41,7 @@ class _LoginPageState extends State<LoginPage> {
               height: 20,
             ),
             TextField(
-              controller: _emailController..text = "Jonnyjiki@gmail.com",
+              controller: _emailController..text = "Jonny1@gmail.com",
               decoration: const InputDecoration(
                   border: OutlineInputBorder(), labelText: 'Username'),
             ),
@@ -66,10 +67,19 @@ class _LoginPageState extends State<LoginPage> {
                   prefs.setInt("id", value.id);
                   prefs.setString("name", value.name);
                   prefs.setString("email", value.email);
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const HomePage()));
+                  if (value.role == 1) {
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const HomePage()));
+                  } else if (value.role == 2) {
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => RoleUserPage(
+                                  id: value.id,
+                                )));
+                  }
                 }).catchError((e) {
                   CoolAlert.show(
                       context: context,

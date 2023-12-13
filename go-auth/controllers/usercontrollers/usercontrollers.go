@@ -4,6 +4,7 @@ package usercontrollers
 
 import (
 	"log"
+	"strconv"
 
 	"github.com/RazoelZ/Learning-Haus/go-auth/helper"
 	"github.com/RazoelZ/Learning-Haus/go-auth/models"
@@ -292,13 +293,88 @@ func GetUserById(r *helper.Repository) func(*fiber.Ctx) error {
 			"status":  "success",
 			"message": "Successfully retrieved user",
 			"data": fiber.Map{
-				"user": fiber.Map{
-					"name":    user.Name,
-					"email":   user.Email,
-					"job":     fiber.Map{"position": job.Position},
-					"company": fiber.Map{"name": company.Name},
-				},
+				"id":            user.ID,
+				"name":          user.Name,
+				"email":         user.Email,
+				"tanggal_masuk": user.CreatedAt,
+				"job":           job.Position,
+				"salary":        job.Salary,
+				"company":       company.Name,
 			},
 		})
+	}
+}
+
+func GetFilterUserbyJobs(r *helper.Repository) func(*fiber.Ctx) error {
+	return func(c *fiber.Ctx) error {
+		var users []models.User
+		var userFilter models.User
+
+		id := c.Query("id")
+		if id != "" {
+			ID, err := strconv.ParseUint(id, 10, 64)
+			if err != nil {
+				log.Printf("Error parsing 'id' parameter: %s", err)
+				return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+					"message": "Error parsing 'id' parameter",
+					"error":   err.Error(),
+				})
+			}
+			userFilter.ID = uint(ID)
+		}
+
+		err := r.DB.Where("job_id = ?", id).Find(&users).Error
+
+		if err != nil {
+			log.Printf("Error getting users: %s", err)
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"message": "Error getting users",
+				"error":   err.Error(),
+			})
+		}
+
+		return c.JSON(fiber.Map{
+			"status":  "success",
+			"message": "Filtered users",
+			"data":    users,
+		})
+
+	}
+}
+
+func GetFilterUserbyCompanies(r *helper.Repository) func(*fiber.Ctx) error {
+	return func(c *fiber.Ctx) error {
+		var users []models.User
+		var userFilter models.User
+
+		id := c.Query("id")
+		if id != "" {
+			ID, err := strconv.ParseUint(id, 10, 64)
+			if err != nil {
+				log.Printf("Error parsing 'id' parameter: %s", err)
+				return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+					"message": "Error parsing 'id' parameter",
+					"error":   err.Error(),
+				})
+			}
+			userFilter.ID = uint(ID)
+		}
+
+		err := r.DB.Where("company_id = ?", id).Find(&users).Error
+
+		if err != nil {
+			log.Printf("Error getting users: %s", err)
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"message": "Error getting users",
+				"error":   err.Error(),
+			})
+		}
+
+		return c.JSON(fiber.Map{
+			"status":  "success",
+			"message": "Filtered users",
+			"data":    users,
+		})
+
 	}
 }

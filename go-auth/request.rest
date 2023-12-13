@@ -2,9 +2,9 @@ POST http://127.0.0.1:8888/api/register
 Content-Type: application/application/json
 
 {
-    "name" : "Jonny doe",
-    "email" : "Jonnydoe@gmail.com",
-    "role" : 2,
+    "name" : "Jonny 1",
+    "email" : "Jonny1@gmail.com",
+    "role" : 1,
     "password" : "password"
 }
 
@@ -14,9 +14,9 @@ POST http://127.0.0.1:8888/api/createjob
 Content-Type: application/application/json
 
 {
-    "position" : "Manager",
-    "description" : "Manage the company",
-    "salary" : "10000000"
+    "position" : "IT Support",
+    "description" : "IT Support for company",
+    "salary" : "500000"
 }
 
 ### create company
@@ -43,15 +43,15 @@ PUT http://127.0.0.1:8888/api/user/changejob/2
 Content-Type: application/application/json
 
 {
-    "job_id" : 2
+    "job_id" : 3
 }
 
 ### Change Company
-PUT http://127.0.0.1:8888/api/user/changecompany/2
+PUT http://127.0.0.1:8888/api/user/changecompany/4
 Content-Type: application/application/json
 
 {
-    "company_id" : 2
+    "company_id" : 1
 }
 
 ### Delete user
@@ -66,14 +66,21 @@ Content-Type: application/application/json
     "email" : "jjjjj@gmail.com"
 }
 
+### parameter jobs
+GET http://127.0.0.1:8888/api/employeebyjobs?id=2
+### parameter companies
+GET http://127.0.0.1:8888/api/employeebycompanies?id=3
+
 ### GET 1 USER
 GET http://127.0.0.1:8888/api/user/2
 
 ### GET ALL USER
 GET http://127.0.0.1:8888/api/users
 
-### GET ALL COMPANY
+### GET ALL COMPANYs
 GET http://127.0.0.1:8888/api/companies
 
 ### GET ALL JOB
 GET http://127.0.0.1:8888/api/jobs
+
+### GET company

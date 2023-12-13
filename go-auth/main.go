@@ -80,4 +80,7 @@ func SetupRoutes(app *fiber.App, r *helper.Repository) {
 	api.Delete("/user/:id", usercontrollers.DeleteUser(r))
 	api.Get("/jobs", jobcontrollers.GetAllJobs(r))
 	api.Get("/companies", companycontrollers.GetAllCompanies(r))
+	api.Get("/job", jobcontrollers.GetFilterJob(r))
+	api.Get("/employeebyjobs", usercontrollers.GetFilterUserbyJobs(r))
+	api.Get("/employeebycompanies", usercontrollers.GetFilterUserbyCompanies(r))
 }
