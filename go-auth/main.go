@@ -10,6 +10,7 @@ import (
 	usercontrollers "github.com/RazoelZ/Learning-Haus/go-auth/controllers/usercontrollers"
 	"github.com/RazoelZ/Learning-Haus/go-auth/database"
 	"github.com/RazoelZ/Learning-Haus/go-auth/helper"
+	middleware "github.com/RazoelZ/Learning-Haus/go-auth/middleware"
 	"github.com/RazoelZ/Learning-Haus/go-auth/models"
 	"github.com/gofiber/fiber/v2"
 )
@@ -68,16 +69,16 @@ func main() {
 // SetupRoutes defines API routes
 func SetupRoutes(app *fiber.App, r *helper.Repository) {
 	api := app.Group("/api")
-	api.Get("/users", usercontrollers.Index(r))
+	api.Get("/users", middleware.AuthorizedAPI(), usercontrollers.Index(r))
 	api.Post("/register", usercontrollers.Register(r))
 	api.Post("/createjob", jobcontrollers.CreateJob(r))
 	api.Post("/createcompany", companycontrollers.CreateCompany(r))
 	api.Post("/login", usercontrollers.Login(r))
-	api.Put("/user/changejob/:id", usercontrollers.ChangeJob(r))
-	api.Put("/user/changecompany/:id", usercontrollers.ChangeCompany(r))
-	api.Get("/user/:id", usercontrollers.GetUserById(r))
-	api.Put("/user/:id", usercontrollers.UpdateUser(r))
-	api.Delete("/user/:id", usercontrollers.DeleteUser(r))
+	api.Put("/user/changejob/:id", middleware.AuthorizedAPI(), usercontrollers.ChangeJob(r))
+	api.Put("/user/changecompany/:id", middleware.AuthorizedAPI(), usercontrollers.ChangeCompany(r))
+	api.Get("/user/:id", middleware.AuthorizedAPI(), usercontrollers.GetUserById(r))
+	api.Put("/user/:id", middleware.AuthorizedAPI(), usercontrollers.UpdateUser(r))
+	api.Delete("/user/:id", middleware.AuthorizedAPI(), usercontrollers.DeleteUser(r))
 	api.Get("/jobs", jobcontrollers.GetAllJobs(r))
 	api.Get("/companies", companycontrollers.GetAllCompanies(r))
 	api.Get("/job", jobcontrollers.GetFilterJob(r))

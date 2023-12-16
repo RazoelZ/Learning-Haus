@@ -76,6 +76,7 @@ GET http://127.0.0.1:8888/api/user/2
 
 ### GET ALL USER
 GET http://127.0.0.1:8888/api/users
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb21wYW55X2lkIjoyLCJlbWFpbCI6Ikpvbm55amlraUBnbWFpbC5jb20iLCJleHAiOjE3MDMwMDQ1MzQsImlkIjoyLCJqb2JfaWQiOjQsIm5hbWUiOiJKb25ueSBqaWtpIiwicm9sZSI6Mn0.QZCpvyJz9xLgF9W2orilYmMA0VfPE4pxC8GGG7RwIJw
 
 ### GET ALL COMPANYs
 GET http://127.0.0.1:8888/api/companies

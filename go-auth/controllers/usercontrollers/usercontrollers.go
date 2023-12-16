@@ -4,11 +4,14 @@ package usercontrollers
 
 import (
 	"log"
+	"os"
 	"strconv"
+	"time"
 
 	"github.com/RazoelZ/Learning-Haus/go-auth/helper"
 	"github.com/RazoelZ/Learning-Haus/go-auth/models"
 	"github.com/gofiber/fiber/v2"
+	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -113,20 +116,33 @@ func Login(r *helper.Repository) func(*fiber.Ctx) error {
 		}
 
 		// Generate JWT token
-		// token, err := helper.GenerateJWT(user.ID)
-		// if err != nil {
-		// 	log.Printf("Error generating JWT token: %s", err)
-		// 	return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-		// 		"message": "Error generating JWT token",
-		// 		"error":   err.Error(),
-		// 	})
-		// }
+		token := jwt.New(jwt.SigningMethodHS256)
+		claim := token.Claims.(jwt.MapClaims)
+		claim["id"] = user.ID
+		claim["name"] = user.Name
+		claim["email"] = user.Email
+		claim["role"] = user.Role
+		claim["job_id"] = user.JobID
+		claim["company_id"] = user.CompanyID
+
+		claim["exp"] = time.Now().Add(time.Hour * 72).Unix() // Token expires after 72 hours
+
+		signedToken, err := token.SignedString([]byte(os.Getenv("JWT_SECRET_KEY")))
+
+		if err != nil {
+			log.Printf("Error signing token: %s", err)
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"status":  "failed",
+				"message": "Error signing token",
+				"error":   err.Error(),
+			})
+		}
 
 		return c.JSON(fiber.Map{
 			"status":  "success",
 			"error":   false,
 			"message": "Successfully logged in",
-			"data":    user,
+			"data":    signedToken,
 		})
 	}
 }
